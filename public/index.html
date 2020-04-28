@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Base status</title>
+    <style>
+      body {
+        font-family: monospace;
+        font-size: 1.5em;
+        color: #fff;
+        background: #000;
+      }
+      h1, div {
+        text-align: center;
+      }
+      table {
+        background: #333;
+        width: 50%;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Status</h1>
+    <table id="status-table">
+
+    </div>
+  </body>
+
+  <script>
+    let ws = new WebSocket('ws://localhost:3000/ws/status-updates')
+    let oldtable = document.getElementById('status-table')
+
+    const createTable = (object) => {
+      let table = document.createElement('table')
+
+      for (key in object) {
+        let tr = document.createElement('tr')
+        table.appendChild(tr)
+
+        let td1 = document.createElement('td')
+        let td2 = document.createElement('td')
+        tr.appendChild(td1)
+        tr.appendChild(td2)
+
+        td1.appendChild(document.createTextNode(key))
+        td2.appendChild(document.createTextNode(object[key]))
+      }
+      return table
+    }
+
+    const render = (status) => {
+      console.log(status)
+      let table = createTable(status)
+      oldtable.replaceWith(table)
+      oldtable = table
+    }
+
+    ws.onmessage = event => {
+      let status = JSON.parse(event.data)
+      render(status)
+    }
+  </script>
+</html>
