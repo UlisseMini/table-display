@@ -28,7 +28,12 @@
   </body>
 
   <script>
-    let ws = new WebSocket('ws://localhost:3000/ws/status-updates')
+    let url =
+      (window.location.protocol == 'https:' ? 'wss://' : 'ws://') +
+      window.location.host + '/ws/status-updates'
+
+    let ws = new WebSocket(url)
+
     let oldtable = document.getElementById('status-table')
 
     const createTable = (object) => {
